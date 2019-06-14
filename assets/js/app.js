@@ -15,14 +15,17 @@ var firebaseConfig = {
 
   console.log(database)
 
+  // Sumbit Button Function
   $("#btn-add").on("click", function(event) {
-  event.preventDefault();
+  event.preventDefault()
 
-  var name = $("#train-name").val().trim();
-  var destination = $("#train-destination").val().trim();
-  var time = $("#train-time").val().trim();
-  var frequency = $("#time-freq").val().trim();
+    // Setting Varibles for input fields
+  var name = $("#train-name").val().trim()
+  var destination = $("#train-destination").val().trim()
+  var time = $("#train-time").val().trim()
+  var frequency = $("#time-freq").val().trim()
 
+    // setting train to DB varibles
   var addingTrainToDB = {
     name: name,
     destination: destination,
@@ -30,6 +33,32 @@ var firebaseConfig = {
     frequency: frequency
   }
 
+    // Sending train to DB
   database.ref().push(addingTrainToDB)
+
+
+})
+
+// Getting Firebase Call Back
+
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val());
+
+    // calling var values
+  var name = childSnapshot.val().name
+  var destination = childSnapshot.val().destination
+  var time = childSnapshot.val().time
+  var frequency = childSnapshot.val().frequency
+
+    // setting new varible with DOM elements
+  var appendNewTrainToDOM = $('<tr>').prepend(
+    $('<td>').text(name),
+    $('<td>').text(destination),
+    $('<td>').text(time),
+    $('<td>').text(frequency)
+  )
+
+  // appending new Dom elements
+  $("#table").append(appendNewTrainToDOM)
 
 })
